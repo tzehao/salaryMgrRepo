@@ -23,7 +23,7 @@ public class EmployeePage {
 		return pageNumber;
 	}
 	public void setPageNumber(int pageNumber) {
-		pageNumber = pageNumber;
+		this.pageNumber = pageNumber;
 	}
 	public int getPageSize() {
 		return pageSize;

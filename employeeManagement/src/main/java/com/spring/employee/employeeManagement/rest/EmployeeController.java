@@ -1,5 +1,6 @@
 package com.spring.employee.employeeManagement.rest;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class EmployeeController {
 	
 	@Autowired
 	private EmployeeService employeeService;
+	
+	private String[] columnsArray = {"id", "login", "name", "salary"};
 
 	/*@GetMapping("/usersAll")
 	public List<Employee> findAll() {
@@ -73,7 +76,7 @@ public class EmployeeController {
 	}*/
 
 	@GetMapping("")
-	public ResponseEntity<Page<Employee>> getEmployees(@RequestParam double minSalary, double maxSalary, int offset, int limit, String sort) {
+	public List<Employee> getEmployees(@RequestParam double minSalary, double maxSalary, int offset, int limit, String sort) {
 		String plusMinus = String.valueOf(sort.charAt(0));
 		Direction sortDirection;
 		if(plusMinus.equals("+"))
@@ -82,16 +85,19 @@ public class EmployeeController {
 			sortDirection = Sort.Direction.DESC;
 		else
 			throw new SearchNotFoundException("Incorrect sort input - " + sort);
+		
 		String sortBy = sort.substring(1);
+		if(!Arrays.asList(columnsArray).contains(sortBy))
+			throw new SearchNotFoundException("Incorrect sort input - " + sort);
 		
 		EmployeePage employeePage = new EmployeePage(offset, limit, sortDirection, sortBy);
 		EmployeeSearchCriteria employeeSearchCriteria = new EmployeeSearchCriteria(minSalary, maxSalary);
-		return new ResponseEntity<>(employeeService.getEmployees(employeePage, employeeSearchCriteria), HttpStatus.OK);
+		return employeeService.getEmployees(employeePage, employeeSearchCriteria).getContent();
 	}
 	
 	@PostMapping("/add")
-	public ResponseEntity<Employee> addEmployee(@RequestParam String id, String login, String name, double salary) {
+	public Employee addEmployee(@RequestParam String id, String login, String name, double salary) {
 		Employee e = new Employee(id, login, name, salary);
-		return new ResponseEntity<>(employeeService.addEmployee(e), HttpStatus.OK);
+		return employeeService.addEmployee(e);
 	}
 }
