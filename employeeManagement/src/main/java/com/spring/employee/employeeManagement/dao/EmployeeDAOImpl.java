@@ -1,20 +1,27 @@
 package com.spring.employee.employeeManagement.dao;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
 
 import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.spring.employee.employeeManagement.entity.Employee;
+import com.spring.employee.employeeManagement.entity.EmployeePage;
+import com.spring.employee.employeeManagement.entity.EmployeeSearchCriteria;
 
 @Repository
 public class EmployeeDAOImpl {

@@ -10,21 +10,23 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.spring.employee.employeeManagement.dao.EmployeeCriteriaRepository;
 import com.spring.employee.employeeManagement.dao.EmployeeDAO;
 import com.spring.employee.employeeManagement.entity.Employee;
 import com.spring.employee.employeeManagement.entity.EmployeePage;
+import com.spring.employee.employeeManagement.entity.EmployeeSearchCriteria;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
-	
+
 	@Autowired
 	private EmployeeDAO employeeDAO;
 	
-	public Page<Employee> getEmployee(EmployeePage employeePage) {
-		Sort sort = Sort.by(employeePage.getSortDirection(), employeePage.getSortBy());
-		Pageable pageable = PageRequest.of(employeePage.getPageNumber(), employeePage.getPageSize(), sort);
-		
-		return employeeDAO.findAll(pageable);
+	@Autowired
+	private EmployeeCriteriaRepository employeeCriteriaRepository;
+	
+	public Page<Employee> getEmployees(EmployeePage employeePage, EmployeeSearchCriteria employeeSearchCriteria) {
+		return employeeCriteriaRepository.findAllWithFilters(employeePage, employeeSearchCriteria);
 	}
 	
 	public Employee addEmployee(Employee employee) {

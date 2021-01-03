@@ -1,12 +1,12 @@
 package com.spring.employee.employeeManagement.dao;
 
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import com.spring.employee.employeeManagement.entity.Employee;
 
 @Repository
-public interface EmployeeDAO extends PagingAndSortingRepository<Employee
+public interface EmployeeDAO extends CrudRepository<Employee
 , String>  {
 	/*public List<Employee> findAll();
 	

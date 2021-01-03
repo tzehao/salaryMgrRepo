@@ -22,10 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.employee.employeeManagement.entity.Employee;
 import com.spring.employee.employeeManagement.entity.EmployeePage;
+import com.spring.employee.employeeManagement.entity.EmployeeSearchCriteria;
 import com.spring.employee.employeeManagement.service.EmployeeService;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/users")
 public class EmployeeController {
 	
 	@Autowired
@@ -71,7 +72,7 @@ public class EmployeeController {
 		return "Deleted Employee with id - " + id;
 	}*/
 
-	@GetMapping("/users")
+	@GetMapping("")
 	public ResponseEntity<Page<Employee>> getEmployees(@RequestParam double minSalary, double maxSalary, int offset, int limit, String sort) {
 		String plusMinus = String.valueOf(sort.charAt(0));
 		Direction sortDirection;
@@ -84,10 +85,11 @@ public class EmployeeController {
 		String sortBy = sort.substring(1);
 		
 		EmployeePage employeePage = new EmployeePage(offset, limit, sortDirection, sortBy);
-		return new ResponseEntity<>(employeeService.getEmployee(employeePage), HttpStatus.OK);
+		EmployeeSearchCriteria employeeSearchCriteria = new EmployeeSearchCriteria(minSalary, maxSalary);
+		return new ResponseEntity<>(employeeService.getEmployees(employeePage, employeeSearchCriteria), HttpStatus.OK);
 	}
 	
-	@PostMapping
+	@PostMapping("/add")
 	public ResponseEntity<Employee> addEmployee(@RequestParam String id, String login, String name, double salary) {
 		Employee e = new Employee(id, login, name, salary);
 		return new ResponseEntity<>(employeeService.addEmployee(e), HttpStatus.OK);
