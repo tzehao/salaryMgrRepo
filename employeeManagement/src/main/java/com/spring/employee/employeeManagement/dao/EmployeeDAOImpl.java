@@ -1,23 +1,28 @@
 package com.spring.employee.employeeManagement.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.spring.employee.employeeManagement.entity.Employee;
 
 @Repository
-public class EmployeeDAOImpl implements EmployeeDAO {
+public class EmployeeDAOImpl {
 
 	@Autowired
 	private EntityManager entityManager;
 	
-	@Override
+	/*@Override
 	public List<Employee> findAll() {
 		//get current hibernate session
 		Session currentSess = entityManager.unwrap(Session.class);
@@ -61,6 +66,5 @@ public class EmployeeDAOImpl implements EmployeeDAO {
 		
 		//if id = 0 or null, new employee will be created, rule still applies in this case
 		currentSess.saveOrUpdate(employee);
-	}
-
+	}*/
 }

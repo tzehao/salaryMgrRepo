@@ -3,6 +3,12 @@ package com.spring.employee.employeeManagement.rest;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,10 +16,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.employee.employeeManagement.entity.Employee;
+import com.spring.employee.employeeManagement.entity.EmployeePage;
 import com.spring.employee.employeeManagement.service.EmployeeService;
 
 @RestController
@@ -23,7 +31,7 @@ public class EmployeeController {
 	@Autowired
 	private EmployeeService employeeService;
 
-	@GetMapping("/usersAll")
+	/*@GetMapping("/usersAll")
 	public List<Employee> findAll() {
 		return employeeService.findAll();
 	}
@@ -61,5 +69,27 @@ public class EmployeeController {
 		
 		employeeService.deleteById(id);
 		return "Deleted Employee with id - " + id;
+	}*/
+
+	@GetMapping("/users")
+	public ResponseEntity<Page<Employee>> getEmployees(@RequestParam double minSalary, double maxSalary, int offset, int limit, String sort) {
+		String plusMinus = String.valueOf(sort.charAt(0));
+		Direction sortDirection;
+		if(plusMinus.equals("+"))
+			sortDirection = Sort.Direction.ASC;
+		else if(plusMinus.equals("-"))
+			sortDirection = Sort.Direction.DESC;
+		else
+			throw new SearchNotFoundException("Incorrect sort input - " + sort);
+		String sortBy = sort.substring(1);
+		
+		EmployeePage employeePage = new EmployeePage(offset, limit, sortDirection, sortBy);
+		return new ResponseEntity<>(employeeService.getEmployee(employeePage), HttpStatus.OK);
+	}
+	
+	@PostMapping
+	public ResponseEntity<Employee> addEmployee(@RequestParam String id, String login, String name, double salary) {
+		Employee e = new Employee(id, login, name, salary);
+		return new ResponseEntity<>(employeeService.addEmployee(e), HttpStatus.OK);
 	}
 }
